@@ -18,19 +18,20 @@
       ansible.builtin.yum_repository:
         name: mongodb
         description: MongoDB Repository
-        baseurl: "{{ _mongodb_baseurl }}/{{ mongodb_release }}/{{ ansible_architecture }}/"
+        baseurl: "{{ _mongodb_baseurl }}/{{ mongodb_repo_release }}/{{ ansible_architecture }}/"
         enabled: true
         gpgcheck: true
-        gpgkey: "https://www.mongodb.org/static/pgp/server-{{ mongodb_release }}.asc"
+        gpgkey: "https://www.mongodb.org/static/pgp/server-{{ mongodb_repo_release }}.asc"
       vars:
         _mongodb_baseurl: "https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org"
+      changed_when: false
 
     - name: Update yum cache
       ansible.builtin.yum:
         update_cache: true
 
 - name: Install MongoDB in debian
-  when: ansible_os_family lower == "Debian"
+  when: ansible_os_family == "Debian"
   block:
 
     - name: Install prerequisites
@@ -42,7 +43,7 @@
 
     - name: Install MongoDB apt key
       ansible.builtin.apt_key:
-        url: "https://pgp.mongodb.com/server-{{ mongodb_release }}.asc"
+        url: "https://pgp.mongodb.com/server-{{ mongodb_repo_release }}.asc"
 
     - name: Clean apt repository
       ansible.builtin.file:
@@ -55,13 +56,12 @@
         filename: mongodb
         repo: "{{ _repo }}"
       vars:
-        _is_debian: "{{ (ansible_distribution | lower) == 'debian' }}"
-        _distribution: "{{ ansible_distribution | lower }}"
-        _os_release: "{{ ansible_distribution_release }}"
+        _is_debian: "{{ ansible_distribution == 'Debian' }}"
         _repo_mongodb: "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt"
-        _repo_ubuntu_url: "{{ _repo_mongodb }}/{{ _distribution }} {{ _os_release }}"
+        _repo_ubuntu_url: "{{ _repo_mongodb }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }}"
         _repo_ubuntu_name: "{{ 'main' if _is_debian else 'multiverse' }}"
-        _repo: "{{ _repo_ubuntu_url }}/mongodb-org/{{ mongodb_release }} {{ _repo_ubuntu_name }}"
+        _repo: "{{ _repo_ubuntu_url }}/mongodb-org/{{ mongodb_repo_release }} {{ _repo_ubuntu_name }}"
+      changed_when: false
 
     - name: Update apt repos
       ansible.builtin.apt:

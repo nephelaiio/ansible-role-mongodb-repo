@@ -6,4 +6,4 @@
   roles:
 
     - nephelaiio.plugins
-    - wpnops.mongodb-repo
+    - wpnops.mongodb_repo
