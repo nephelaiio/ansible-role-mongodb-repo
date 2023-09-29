@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: mongodb-repo
+  role_name: mongodb_repo
   namespace: wpnops
   author: wpnops
   description: An Ansible role to configure MongoDB repository

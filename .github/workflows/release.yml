@@ -14,7 +14,7 @@ on:
 defaults:
 
   run:
-    working-directory: 'wpnops.mongodb-repo'
+    working-directory: 'wpnops.mongodb_repo'
 
 jobs:
 
@@ -26,7 +26,7 @@ jobs:
       - name: Check out the codebase.
         uses: actions/checkout@v4
         with:
-          path: 'wpnops.mongodb-repo'
+          path: 'wpnops.mongodb_repo'
 
       - name: Set up Python 3
         uses: actions/setup-python@v4
