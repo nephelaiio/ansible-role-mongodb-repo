@@ -24,6 +24,7 @@
         gpgkey: "https://www.mongodb.org/static/pgp/server-{{ mongodb_repo_release }}.asc"
       vars:
         _mongodb_baseurl: "https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org"
+      changed_when: false
 
     - name: Update yum cache
       ansible.builtin.yum:

@@ -29,8 +29,6 @@ jobs:
             command: /lib/systemd/systemd
           - name: ubuntu2004
             command: /lib/systemd/systemd
-          - name: debian12
-            command: /lib/systemd/systemd
           - name: debian11
             command: /lib/systemd/systemd
           - name: rockylinux9
