@@ -30,7 +30,7 @@
         update_cache: true
 
 - name: Install MongoDB in debian
-  when: ansible_os_family lower == "Debian"
+  when: ansible_os_family == "Debian"
   block:
 
     - name: Install prerequisites
@@ -55,11 +55,9 @@
         filename: mongodb
         repo: "{{ _repo }}"
       vars:
-        _is_debian: "{{ (ansible_distribution | lower) == 'debian' }}"
-        _distribution: "{{ ansible_distribution | lower }}"
-        _os_release: "{{ ansible_distribution_release }}"
+        _is_debian: "{{ ansible_distribution == 'Debian' }}"
         _repo_mongodb: "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt"
-        _repo_ubuntu_url: "{{ _repo_mongodb }}/{{ _distribution }} {{ _os_release }}"
+        _repo_ubuntu_url: "{{ _repo_mongodb }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }}"
         _repo_ubuntu_name: "{{ 'main' if _is_debian else 'multiverse' }}"
         _repo: "{{ _repo_ubuntu_url }}/mongodb-org/{{ mongodb_release }} {{ _repo_ubuntu_name }}"
 
