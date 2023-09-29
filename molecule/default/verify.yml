@@ -3,8 +3,19 @@
 
   hosts: all
 
-  gather_facts: true
-
-  become: true
+  vars:
+    mongodb_packages:
+      - mongodb-org
+      - mongodb-org-mongos
 
   tasks:
+
+    - name: Check mongodb-org package availability for Debian derivatives
+      shell: apt-cache search {{ item }} | awk '{print $1}' | grep "^{{ item }}$"
+      loop: "{{ mongodb_packages }}"
+      when: ansible_os_family == 'Debian'
+
+    - name: Check mongodb-org package availability for RedHat derivatives
+      shell: yum info {{ package_name }}
+      loop: "{{ mongodb_packages }}"
+      when: ansible_os_family == 'RedHat'

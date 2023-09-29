@@ -56,10 +56,11 @@
         repo: "{{ _repo }}"
       vars:
         _is_debian: "{{ ansible_distribution == 'Debian' }}"
-        _repo_mongodb: "eeb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt"
+        _repo_mongodb: "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt"
         _repo_ubuntu_url: "{{ _repo_mongodb }}/{{ ansible_distribution | lower }} {{ ansible_distribution_release }}"
         _repo_ubuntu_name: "{{ 'main' if _is_debian else 'multiverse' }}"
         _repo: "{{ _repo_ubuntu_url }}/mongodb-org/{{ mongodb_repo_release }} {{ _repo_ubuntu_name }}"
+      changed_when: false
 
     - name: Update apt repos
       ansible.builtin.apt:
