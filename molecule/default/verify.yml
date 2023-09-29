@@ -16,6 +16,6 @@
       when: ansible_os_family == 'Debian'
 
     - name: Check mongodb-org package availability for RedHat derivatives
-      shell: yum info {{ package_name }}
+      shell: yum info {{ item }}
       loop: "{{ mongodb_packages }}"
       when: ansible_os_family == 'RedHat'
