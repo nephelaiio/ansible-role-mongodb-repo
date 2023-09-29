@@ -1,2 +1,3 @@
 ---
 mongodb_repo_state: present
+mongodb_repo_release: 7.0
