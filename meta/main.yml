@@ -1,0 +1,22 @@
+---
+galaxy_info:
+  role_name: mongodb-repo
+  namespace: wpnops
+  author: wpnops
+  description: An Ansible role to configure MongoDB repository
+  license: MIT
+  min_ansible_version: 2.8
+  platforms:
+    - name: EL
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+  galaxy_tags: ['mongodb', 'repo']
+
+dependencies:
+  - nephelaiio.plugins

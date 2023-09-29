@@ -1,0 +1,6 @@
+---
+_mongodb_repo_package_default:
+  default:
+    - mongodb-repo
+
+mongodb_repo_state: present
