@@ -40,5 +40,8 @@ jobs:
         run: make install
 
       - name: Trigger a new import on galaxy
-        run: >-
-          GALAXY_API_KEY=${{ secrets.GALAXY_API_KEY }} make publish
+        run: >
+          make publish
+            GALAXY_API_KEY=${{ secrets.GALAXY_API_KEY }}
+            GITHUB_REPOSITORY_OWNER=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
+            GITHUB_REPOSITORY_NAME=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
