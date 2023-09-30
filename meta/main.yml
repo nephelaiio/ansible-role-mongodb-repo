@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   role_name: mongodb_repo
-  namespace: wpnops
+  namespace: wpninfra
   author: wpnops
   description: An Ansible role to configure MongoDB repository
   license: MIT
