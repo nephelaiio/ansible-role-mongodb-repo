@@ -1,4 +1,4 @@
-# wpnops.mongodb_repo
+# wpninfra.mongodb_repo
 
 [![Build Status](https://github.com/wpnops/ansible-role-mongodb-repo/workflows/molecule/badge.svg)](https://github.com/wpnops/ansible-role-mongodb-repo/actions)
 [![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-wpnops.mongodb-repo.vim-blue.svg)](https://galaxy.ansible.com/wpnops/mongodb-repo/)
@@ -17,7 +17,7 @@ By default this role does not depend on any external roles. If any such dependen
 
 - hosts: servers
   roles:
-     - role: wpnops.mongodb_repo
+     - role: wpninfra.mongodb_repo
        mongodb_repo_package_state: latest
 
 ## Testing

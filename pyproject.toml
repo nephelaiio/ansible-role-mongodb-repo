@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "wpnops.mongodb_repo"
+name = "wpninfra.mongodb_repo"
 version = "0.1.0"
 description = ""
 authors = ["wpnops"]
