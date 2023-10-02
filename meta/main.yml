@@ -1,8 +1,8 @@
 ---
 galaxy_info:
   role_name: mongodb_repo
-  namespace: wpninfra
-  author: wpnops
+  namespace: nephelaiio
+  author: nephelaiio
   description: An Ansible role to configure MongoDB repository
   license: MIT
   min_ansible_version: '2.11'

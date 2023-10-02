@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "wpninfra.mongodb_repo"
+name = "nephelaiio.mongodb_repo"
 version = "0.1.0"
 description = ""
-authors = ["wpnops"]
+authors = ["nephelaiio"]
 
 [tool.poetry.dependencies]
 python = "^3.8"

@@ -10,7 +10,7 @@ on:
 defaults:
 
   run:
-    working-directory: 'wpninfra.mongodb_repo'
+    working-directory: 'nephelaiio.mongodb_repo'
 
 jobs:
 
@@ -22,7 +22,7 @@ jobs:
       - name: Check out the codebase
         uses: actions/checkout@v4
         with:
-          path: 'wpninfra.mongodb_repo'
+          path: 'nephelaiio.mongodb_repo'
 
       - name: Set up python 3
         uses: actions/setup-python@v4
