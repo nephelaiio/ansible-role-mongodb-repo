@@ -11,7 +11,9 @@
   tasks:
 
     - name: Check mongodb-org package availability for Debian derivatives
-      ansible.builtin.shell: set -o pipefail && apt-cache search {{ item }} | awk '{print $1}' | grep "^{{ item }}$"
+      ansible.builtin.shell:
+        cmd: set -o pipefail && apt-cache search {{ item }} | awk '{print $1}' | grep "^{{ item }}$"
+        executable: /bin/bash
       loop: "{{ mongodb_packages }}"
       when: ansible_os_family == 'Debian'
 
