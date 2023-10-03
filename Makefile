@@ -32,4 +32,4 @@ publish:
 		--api-key ${GALAXY_API_KEY} ${GITHUB_ORGANIZATION} ${GITHUB_REPOSITORY}
 
 version:
-	@poetry version
+	@poetry run molecule version
