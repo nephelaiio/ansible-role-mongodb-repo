@@ -1,6 +1,6 @@
 # nephelaiio.mongodb_repo
 
-[![Build Status](https://github.com/nephelaiio/ansible-role-mongodb-repo/workflows/molecule/badge.svg)](https://github.com/nephelaiio/ansible-role-mongodb-repo/actions)
+[![Build Status](https://github.com/nephelaiio/ansible-role-mongodb-repo/actions/workflows/molecule.yml/badge.svg)](https://github.com/nephelaiio/ansible-role-mongodb-repo/actions/workflows/molecule.yml)
 [![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-nephelaiio.mongodb-repo.vim-blue.svg)](https://galaxy.ansible.com/nephelaiio/mongodb-repo/)
 
 An [ansible role](https://galaxy.ansible.com/nephelaiio/mongodb_repo) to install and configure MongoDB repositories
