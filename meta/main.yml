@@ -1,6 +1,5 @@
 ---
 galaxy_info:
-  standalone: true
   role_name: mongodb_repo
   author: nephelaiio
   description: An Ansible role to configure MongoDB repository
