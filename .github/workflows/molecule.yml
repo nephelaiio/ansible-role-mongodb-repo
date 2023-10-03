@@ -51,7 +51,7 @@ jobs:
         run: make install
 
       - name: Debug test environment
-        run: make version
+        run: make debug
 
       - name: Run molecule tests.
         run: make test
