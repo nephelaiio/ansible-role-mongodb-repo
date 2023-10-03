@@ -21,7 +21,7 @@ lint: install
 	poetry run ansible-lint .
 	poetry run molecule syntax
 
-create prepare converge idempotence side-effect verify destroy login reset:
+dependency create prepare converge idempotence side-effect verify destroy login reset:
 	MOLECULE_DOCKER_IMAGE=${MOLECULE_DOCKER_IMAGE} poetry run molecule $@ -s ${MOLECULE_SCENARIO}
 
 clean: destroy reset

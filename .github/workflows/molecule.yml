@@ -47,11 +47,11 @@ jobs:
       - name: Install make
         run: sudo apt-get install -y make
 
-      - name: Debug test environment
-        run: make version
-
       - name: Install dependencies
         run: make install
+
+      - name: Debug test environment
+        run: make version
 
       - name: Run molecule tests.
         run: make test
