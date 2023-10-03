@@ -40,6 +40,7 @@ jobs:
         run: make install
 
       - name: Trigger a new import on galaxy
-        run: make publish GITHUB_ACTION_REPOSITORY=$GITHUB_ACTION_REPOSITORY
+        run: make publish
         env:
           GALAXY_API_KEY: "${{ secrets.GALAXY_API_KEY }}"
+          GITHUB_REPOSITORY: "${{ github.repository }}"

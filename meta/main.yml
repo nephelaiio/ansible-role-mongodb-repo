@@ -1,7 +1,6 @@
 ---
 galaxy_info:
   role_name: mongodb_repo
-  namespace: nephelaiio
   author: nephelaiio
   description: An Ansible role to configure MongoDB repository
   license: MIT

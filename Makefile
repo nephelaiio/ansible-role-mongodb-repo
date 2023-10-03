@@ -3,9 +3,9 @@
 MOLECULE_SCENARIO ?= default
 MOLECULE_DOCKER_IMAGE ?= ubuntu2004
 GALAXY_API_KEY ?=
-GITHUB_ACTION_REPOSITORY ?= $$(git config --get remote.origin.url | cut -d: -f 2 | cut -d. -f 1)
-GITHUB_ORGANIZATION = $$(echo ${GITHUB_ACTION_REPOSITORY} | cut -d/ -f 1)
-GITHUB_REPOSITORY = $$(echo ${GITHUB_ACTION_REPOSITORY} | cut -d/ -f 2)
+GITHUB_REPOSITORY ?= $$(git config --get remote.origin.url | cut -d: -f 2 | cut -d. -f 1)
+GITHUB_ORG = $$(echo ${GITHUB_REPOSITORY} | cut -d/ -f 1)
+GITHUB_REPO = $$(echo ${GITHUB_REPOSITORY} | cut -d/ -f 2)
 
 all: install version lint test
 
@@ -28,9 +28,11 @@ clean: destroy reset
 	poetry env remove $$(which python)
 
 publish:
-	@echo publishing repository ${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}
+	@echo publishing repository ${GITHUB_REPOSITORY}
+	@echo GITHUB_ORGANIZATION=${GITHUB_ORG}
+	@echo GITHUB_REPOSITORY=${GITHUB_REPO}
 	@poetry run ansible-galaxy role import \
-		--api-key ${GALAXY_API_KEY} ${GITHUB_ORGANIZATION} ${GITHUB_REPOSITORY}
+		--api-key ${GALAXY_API_KEY} ${GITHUB_ORG} ${GITHUB_REPO}
 
 version:
 	@poetry run molecule --version
