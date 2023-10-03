@@ -28,7 +28,9 @@ clean: destroy reset
 	poetry env remove $$(which python)
 
 publish:
-	@echo publishing repository ${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}
+	@echo publishing repository ${GITHUB_ACTION_REPOSITORY}
+	@echo GITHUB_ORGANIZATION=${GITHUB_ORGANIZATION}
+	@echo GITHUB_REPOSITORY=${GITHUB_REPOSITORY}
 	@poetry run ansible-galaxy role import \
 		--api-key ${GALAXY_API_KEY} ${GITHUB_ORGANIZATION} ${GITHUB_REPOSITORY}
 
