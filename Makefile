@@ -25,6 +25,7 @@ dependency create prepare converge idempotence side-effect verify destroy login 
 	MOLECULE_DOCKER_IMAGE=${MOLECULE_DOCKER_IMAGE} poetry run molecule $@ -s ${MOLECULE_SCENARIO}
 
 clean: destroy reset
+	poetry env remove $$(which python)
 
 publish:
 	@echo publishing repository ${GITHUB_ORGANIZATION}/${GITHUB_REPOSITORY}
