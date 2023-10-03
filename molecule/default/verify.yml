@@ -11,11 +11,13 @@
   tasks:
 
     - name: Check mongodb-org package availability for Debian derivatives
-      shell: apt-cache search {{ item }} | awk '{print $1}' | grep "^{{ item }}$"
+      ansible.builtin.shell:
+        cmd: set -o pipefail && apt-cache search {{ item }} | awk '{print $1}' | grep "^{{ item }}$"
+        executable: /bin/bash
       loop: "{{ mongodb_packages }}"
       when: ansible_os_family == 'Debian'
 
     - name: Check mongodb-org package availability for RedHat derivatives
-      shell: yum info {{ item }}
+      ansible.builtin.shell: yum info {{ item }}
       loop: "{{ mongodb_packages }}"
       when: ansible_os_family == 'RedHat'
