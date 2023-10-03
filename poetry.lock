@@ -643,7 +643,7 @@ dev = ["doc8", "flake8", "flake8-import-order", "rstcheck[sphinx]", "sphinx"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.11"
-content-hash = "4631c3da0da99abace8f03543a605074991e4c7614228e0ca5878d51fd25b96d"
+content-hash = "38fa255a369ec909be9de997dbd40a3e6dd68e520e51daf5763f10408f4589c0"
 
 [metadata.files]
 ansible = [
