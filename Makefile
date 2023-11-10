@@ -31,11 +31,24 @@ collections:
 
 requirements: roles collections
 
+roles:
+	[ -f ${REQUIREMENTS} ] && yq '.$@[] | .name' -r < ${REQUIREMENTS} \
+		| xargs -L1 poetry run ansible-galaxy role install --force || exit 0
+
+collections:
+	[ -f ${REQUIREMENTS} ] && yq '.$@[]' -r < ${REQUIREMENTS} \
+		| xargs -L1 echo poetry run ansible-galaxy -vvv collection install --force || exit 0
+
+requirements: roles collections
+
 dependency create prepare converge idempotence side-effect verify destroy login reset:
 	MOLECULE_DOCKER_IMAGE=${MOLECULE_DOCKER_IMAGE} poetry run molecule $@ -s ${MOLECULE_SCENARIO}
 
+ignore:
+	poetry run ansible-lint --generate-ignore
+
 clean: destroy reset
-	poetry env remove $$(which python)
+	@poetry env remove $$(which python) >/dev/null 2>&1 || exit 0
 
 publish:
 	@echo publishing repository ${GITHUB_REPOSITORY}
