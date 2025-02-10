@@ -1,3 +1,4 @@
 ---
+# Trigger CI
 mongodb_repo_state: present
-mongodb_repo_release: 7.0
+mongodb_repo_release: 8.0

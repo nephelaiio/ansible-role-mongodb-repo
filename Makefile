@@ -15,7 +15,8 @@ test: lint
 
 install:
 	@type poetry >/dev/null || pip3 install poetry
-	@poetry install
+	@poetry self add poetry-plugin-export
+	@poetry install --no-root
 
 lint: install
 	poetry run yamllint .
