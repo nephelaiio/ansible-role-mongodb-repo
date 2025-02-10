@@ -2,9 +2,8 @@
 - name: Install MongoDB in redhat
   when: ansible_os_family == "RedHat"
   block:
-
     - name: Install prerequisites
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: gnupg2
         update_cache: true
 
@@ -27,13 +26,12 @@
       changed_when: false
 
     - name: Update yum cache
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         update_cache: true
 
 - name: Install MongoDB in debian
   when: ansible_os_family == "Debian"
   block:
-
     - name: Install prerequisites
       ansible.builtin.apt:
         name:
