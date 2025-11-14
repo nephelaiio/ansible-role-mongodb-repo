@@ -1,5 +1,6 @@
 ---
 # Trigger CI
+mongodb_repo_gpg_key: "https://pgp.mongodb.com/server-{{ mongodb_repo_release }}.asc"
 mongodb_repo_state: present
 mongodb_repo_baseurl: https://repo.mongodb.org/
 mongodb_repo_release: 8.0

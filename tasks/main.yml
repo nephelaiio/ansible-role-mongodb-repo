@@ -17,12 +17,12 @@
         is_deb882_debian: "{{ (ansible_facts.distribution == 'Debian') and (ansible_facts.distribution_version is version('11', '>=')) }}"
         is_deb882_ubuntu: "{{ (ansible_facts.distribution == 'Ubuntu') and (ansible_facts.distribution_version is version('22.04', '>=')) }}"
 
-    - name: Deploy legacy apt repository configuration
+    - name: Deploy legacy apt repository definition
       when: not is_deb882
       block:
         - name: Install MongoDB apt key
           ansible.builtin.apt_key:
-            url: "https://pgp.mongodb.com/server-{{ mongodb_repo_release }}.asc"
+            url: "{{ mongodb_repo_gpg_key }}"
 
         - name: Clean apt repository
           ansible.builtin.file:
@@ -42,16 +42,16 @@
             _repo: "{{ _repo_apt_base }} {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_repo_release }} {{ _repo_component }}"
           changed_when: false
 
-    - name: Deploy deb882 repository configuration
+    - name: Deploy deb882 repository definition
       when: is_deb882
       block:
-        - name: Install elastic apt repo (elastic license)
+        - name: Install deb882 repository
           ansible.builtin.deb822_repository:
             name: mongodb
             uris: "{{ mongodb_repo_baseurl }}/apt"
             suites: "{{ ansible_distribution_release }}/mongodb-org/{{ mongodb_repo_release }}"
             components: "{{ 'main' if (ansible_distribution == 'Debian') else 'multiverse' }}"
-            signed_by: "{{ elastic_repo_gpg_key }}"
+            signed_by: "{{ mongodb_repo_gpg_key }}"
             state: present
             enabled: true
 
