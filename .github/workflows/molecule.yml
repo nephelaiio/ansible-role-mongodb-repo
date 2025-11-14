@@ -1,25 +1,20 @@
 ---
 name: molecule
-
 on:
   pull_request:
     branches:
       - master
-  schedule:
-    - cron: "0 5 * * 5"
-
-defaults:
-  run:
-    working-directory: "nephelaiio.mongodb_repo"
-
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   molecule:
     name: molecule
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         scenario:
-          - name: default
+          - default
         image:
           - name: ubuntu2204
             command: /lib/systemd/systemd
@@ -30,33 +25,14 @@ jobs:
           - name: rockylinux9
             command: /usr/lib/systemd/systemd
     steps:
-      - name: Check out the codebase.
-        uses: actions/checkout@v4
+      - name: Run molecule test
+        uses: pokerops/ansible-utils@master
         with:
-          path: "nephelaiio.mongodb_repo"
-
-      - name: Set up python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-
-      - name: Update ubuntu repositories
-        run: sudo apt-get update
-
-      - name: Install make
-        run: sudo apt-get install -y make
-
-      - name: Install dependencies
-        run: make install
-
-      - name: Debug test environment
-        run: make debug
-
-      - name: Run molecule tests.
-        run: make test
+          run: "make install requirements test"
         env:
           PY_COLORS: "1"
           ANSIBLE_FORCE_COLOR: "1"
+          MOLECULE_SCENARIO: ${{ matrix.scenario }}
           MOLECULE_DOCKER_IMAGE: ${{ matrix.image.name }}
           MOLECULE_DOCKER_COMMAND: ${{ matrix.image.command }}
-          MOLECULE_SCENARIO: ${{ matrix.scenario.name }}
+          MOLECULE_BEATS_MAJOR_VERSION: ${{ matrix.release }}
