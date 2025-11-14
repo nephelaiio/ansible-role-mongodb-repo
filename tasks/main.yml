@@ -35,11 +35,9 @@
             filename: mongodb
             repo: "{{ _repo }}"
           vars:
-            _is_debian: "{{ ansible_distribution == 'Debian' }}"
-            _repo_mongodb: "deb [ arch=amd64,arm64 ] {{ mongodb_repo_baseurl }}/apt/"
-            _repo_apt_base: "{{ _repo_mongodb }}/{{ ansible_distribution | lower }}"
-            _repo_component: "{{ 'main' if (ansible_distribution == 'Debian') else 'multiverse' }}"
-            _repo: "{{ _repo_apt_base }} {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_repo_release }} {{ _repo_component }}"
+            _repo_apt_base: "deb [ arch=amd64,arm64 ] {{ mongodb_repo_baseurl }}/apt/{{ ansible_distribution | lower }}"
+            _repo_apt_component: "{{ 'main' if (ansible_distribution == 'Debian') else 'multiverse' }}"
+            _repo: "{{ _repo_apt_base }} {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_repo_release }} {{ _repo_apt_component }}"
           changed_when: false
 
     - name: Deploy deb882 repository definition
@@ -48,7 +46,7 @@
         - name: Install deb882 repository
           ansible.builtin.deb822_repository:
             name: mongodb
-            uris: "{{ mongodb_repo_baseurl }}/apt"
+            uris: "{{ mongodb_repo_baseurl }}/apt/{{ ansible_distribution | lower }}"
             suites: "{{ ansible_distribution_release }}/mongodb-org/{{ mongodb_repo_release }}"
             components: "{{ 'main' if (ansible_distribution == 'Debian') else 'multiverse' }}"
             signed_by: "{{ mongodb_repo_gpg_key }}"
