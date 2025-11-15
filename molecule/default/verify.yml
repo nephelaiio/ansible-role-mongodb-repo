@@ -1,15 +1,11 @@
 ---
 - name: Verify
-
   hosts: all
-
   vars:
     mongodb_packages:
       - mongodb-org
       - mongodb-org-mongos
-
   tasks:
-
     - name: Check mongodb-org package availability for Debian derivatives
       ansible.builtin.shell:
         cmd: set -o pipefail && apt-cache search {{ item }} | awk '{print $1}' | grep "^{{ item }}$"
