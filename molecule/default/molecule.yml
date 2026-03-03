@@ -20,10 +20,5 @@ platforms:
       - /opt
 provisioner:
   name: ansible
-  inventory:
-    hosts:
-      all:
-        vars:
-          mongodb_repo_gpg_version: 8.0
 verifier:
   name: ansible
