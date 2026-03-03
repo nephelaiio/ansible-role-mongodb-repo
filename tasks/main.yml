@@ -17,6 +17,13 @@
         is_deb882_debian: "{{ (ansible_facts.distribution == 'Debian') and (ansible_facts.distribution_version is version('11', '>=')) }}"
         is_deb882_ubuntu: "{{ (ansible_facts.distribution == 'Ubuntu') and (ansible_facts.distribution_version is version('22.04', '>=')) }}"
 
+    - name: Set repo gpg key fact
+      ansible.builtin.set_fact:
+        mongodb_repo_gpg_key: "{{ url }}"
+      vars:
+        version: "{{ mongodb_repo_release | string }}"
+        url: "https://pgp.mongodb.com/server-{{ version.split('.') | first }}.0.asc"
+
     - name: Deploy legacy apt repository definition
       when: not is_deb882
       block:
