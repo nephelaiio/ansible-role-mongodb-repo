@@ -24,18 +24,18 @@
         version: "{{ mongodb_repo_release | string }}"
         url: "https://pgp.mongodb.com/server-{{ version.split('.') | first }}.0.asc"
 
+    - name: Clean apt repository
+      ansible.builtin.file:
+        state: absent
+        path: /etc/apt/sources.list.d/mongodb.list
+      changed_when: false
+
     - name: Deploy legacy apt repository definition
-      when: not is_deb882
+      when: not is_deb882 | bool
       block:
         - name: Install MongoDB apt key
           ansible.builtin.apt_key:
             url: "{{ mongodb_repo_gpg_key }}"
-
-        - name: Clean apt repository
-          ansible.builtin.file:
-            state: absent
-            path: /etc/apt/sources.list.d/mongodb.list
-          changed_when: false
 
         - name: Add Debian apt repository
           ansible.builtin.apt_repository:
@@ -47,18 +47,16 @@
             _repo: "{{ _repo_apt_base }} {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_repo_release }} {{ _repo_apt_component }}"
           changed_when: false
 
-    - name: Deploy deb882 repository definition
-      when: is_deb882
-      block:
-        - name: Install deb882 repository
-          ansible.builtin.deb822_repository:
-            name: mongodb
-            uris: "{{ mongodb_repo_baseurl }}/apt/{{ ansible_distribution | lower }}"
-            suites: "{{ ansible_distribution_release }}/mongodb-org/{{ mongodb_repo_release }}"
-            components: "{{ 'main' if (ansible_distribution == 'Debian') else 'multiverse' }}"
-            signed_by: "{{ mongodb_repo_gpg_key }}"
-            state: present
-            enabled: true
+    - name: Install deb882 repository
+      ansible.builtin.deb822_repository:
+        name: mongodb
+        uris: "{{ mongodb_repo_baseurl }}/apt/{{ ansible_distribution | lower }}"
+        suites: "{{ ansible_distribution_release }}/mongodb-org/{{ mongodb_repo_release }}"
+        components: "{{ 'main' if (ansible_distribution == 'Debian') else 'multiverse' }}"
+        signed_by: "{{ mongodb_repo_gpg_key }}"
+        state: present
+        enabled: true
+      when: is_deb882 | bool
 
     - name: Update apt repos
       ansible.builtin.apt:
