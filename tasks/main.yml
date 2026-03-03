@@ -20,6 +20,13 @@
     - name: Deploy legacy apt repository definition
       when: not is_deb882
       block:
+        - name: Set repo gpg key fact:
+          ansible.builtin.set_fact:
+            mongodb_repo_gpg_key: "{{ url }}"
+          vars:
+            version: "{{ mongodb_repo_release | string }}"
+            url: "https://pgp.mongodb.com/server-{{ version.split('.') | first }}.0.asc"
+
         - name: Install MongoDB apt key
           ansible.builtin.apt_key:
             url: "{{ mongodb_repo_gpg_key }}"
