@@ -20,7 +20,7 @@
     - name: Deploy legacy apt repository definition
       when: not is_deb882
       block:
-        - name: Set repo gpg key fact:
+        - name: Set repo gpg key fact
           ansible.builtin.set_fact:
             mongodb_repo_gpg_key: "{{ url }}"
           vars:
