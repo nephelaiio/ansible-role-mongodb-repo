@@ -7,13 +7,15 @@
       - mongodb-org-mongos
   tasks:
     - name: Check mongodb-org package availability for Debian derivatives
-      ansible.builtin.shell:
+      ansible.builtin.command:
         cmd: set -o pipefail && apt-cache search {{ item }} | awk '{print $1}' | grep "^{{ item }}$"
         executable: /bin/bash
       loop: "{{ mongodb_packages }}"
+      changed_when: false
       when: ansible_facts.os_family == 'Debian'
 
     - name: Check mongodb-org package availability for RedHat derivatives
-      ansible.builtin.shell: yum info {{ item }}
+      ansible.builtin.command: yum info {{ item }}
       loop: "{{ mongodb_packages }}"
+      changed_when: false
       when: ansible_facts.os_family == 'RedHat'
