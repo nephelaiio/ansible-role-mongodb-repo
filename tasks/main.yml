@@ -2,6 +2,47 @@
 - name: Install apt repository
   when: ansible_facts.os_family == "Debian"
   block:
+    - name: Set repo gpg key fact
+      ansible.builtin.set_fact:
+        mongodb_repo_gpg_key: "{{ _gpg_url }}"
+        mongodb_repo_apt_release: "{{ _repo_url }}/mongodb-org/{{ mongodb_repo_release }}/Release"
+      vars:
+        version: "{{ mongodb_repo_release | string }}"
+        _distro: "{{ ansible_facts.distribution }}"
+        _distro_rel: "{{ ansible_facts.distribution_release }}"
+        _repo_url: "{{ mongodb_repo_baseurl }}/apt/{{ _distro | lower }}/dists/{{ _distro_rel }}"
+        _gpg_url: "https://pgp.mongodb.com/server-{{ version.split('.') | first }}.0.asc"
+
+    - name: Probe MongoDB apt repository
+      ansible.builtin.uri:
+        url: "{{ item }}"
+      loop:
+        - "{{ mongodb_repo_gpg_key }}"
+        - "{{ mongodb_repo_apt_release }}"
+      ignore_errors: true
+      register: _mongodb_repo_probe
+
+    - name: Verify MongoDB apt repository
+      ansible.builtin.assert:
+        that: _missing | length == 0
+        fail_msg: >-
+          MongoDB {{ mongodb_repo_release }} is not available for distro
+          {{ _distro }} {{ _distro_rel }}: {{ _missing | join(', ') }}
+      vars:
+        _distro: "{{ ansible_facts.distribution }}"
+        _distro_rel: "{{ ansible_facts.distribution_release }}"
+        _results: "{{ _mongodb_repo_probe.results | default([]) }}"
+        _missing: "{{ _results | rejectattr('status', 'equalto', 200) | map(attribute='item') }}"
+
+    - name: Clean apt repository
+      ansible.builtin.file:
+        state: absent
+        path: "{{ item }}"
+      loop:
+        - "/etc/apt/sources.list.d/mongodb.list"
+        - "/etc/apt/sources.list.d/mongodb.sources"
+      changed_when: false
+
     - name: Install prerequisites
       ansible.builtin.apt:
         name:
@@ -18,22 +59,6 @@
         _distro_ver: "{{ ansible_facts.distribution_version }}"
         is_deb882_debian: "{{ (_distro == 'Debian') and (_distro_ver is version('11', '>=')) }}"
         is_deb882_ubuntu: "{{ (_distro == 'Ubuntu') and (_distro_ver is version('22.04', '>=')) }}"
-
-    - name: Set repo gpg key fact
-      ansible.builtin.set_fact:
-        mongodb_repo_gpg_key: "{{ url }}"
-      vars:
-        version: "{{ mongodb_repo_release | string }}"
-        url: "https://pgp.mongodb.com/server-{{ version.split('.') | first }}.0.asc"
-
-    - name: Clean apt repository
-      ansible.builtin.file:
-        state: absent
-        path: "{{ item }}"
-      loop:
-        - "/etc/apt/sources.list.d/mongodb.list"
-        - "/etc/apt/sources.list.d/mongodb.sources"
-      changed_when: false
 
     - name: Deploy legacy apt repository definition
       when: not is_deb882 | bool
