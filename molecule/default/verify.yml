@@ -11,9 +11,13 @@
         cmd: set -o pipefail && apt-cache search {{ item }} | awk '{print $1}' | grep "^{{ item }}$"
         executable: /bin/bash
       loop: "{{ mongodb_packages }}"
-      when: ansible_os_family == 'Debian'
+      changed_when: false
+      when: ansible_facts.os_family == 'Debian'
+      tags: skip_ansible_lint
 
     - name: Check mongodb-org package availability for RedHat derivatives
       ansible.builtin.shell: yum info {{ item }}
       loop: "{{ mongodb_packages }}"
-      when: ansible_os_family == 'RedHat'
+      changed_when: false
+      when: ansible_facts.os_family == 'RedHat'
+      tags: skip_ansible_lint

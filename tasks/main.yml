@@ -1,6 +1,6 @@
 ---
 - name: Install apt repository
-  when: ansible_os_family == "Debian"
+  when: ansible_facts.os_family == "Debian"
   block:
     - name: Install prerequisites
       ansible.builtin.apt:
@@ -14,8 +14,10 @@
       ansible.builtin.set_fact:
         is_deb882: "{{ is_deb882_debian or is_deb882_ubuntu }}"
       vars:
-        is_deb882_debian: "{{ (ansible_facts.distribution == 'Debian') and (ansible_facts.distribution_version is version('11', '>=')) }}"
-        is_deb882_ubuntu: "{{ (ansible_facts.distribution == 'Ubuntu') and (ansible_facts.distribution_version is version('22.04', '>=')) }}"
+        _distro: "{{ ansible_facts.distribution }}"
+        _distro_ver: "{{ ansible_facts.distribution_version }}"
+        is_deb882_debian: "{{ (_distro == 'Debian') and (_distro_ver is version('11', '>=')) }}"
+        is_deb882_ubuntu: "{{ (_distro == 'Ubuntu') and (_distro_ver is version('22.04', '>=')) }}"
 
     - name: Set repo gpg key fact
       ansible.builtin.set_fact:
@@ -27,7 +29,10 @@
     - name: Clean apt repository
       ansible.builtin.file:
         state: absent
-        path: /etc/apt/sources.list.d/mongodb.list
+        path: "{{ item }}"
+      loop:
+        - "/etc/apt/sources.list.d/mongodb.list"
+        - "/etc/apt/sources.list.d/mongodb.sources"
       changed_when: false
 
     - name: Deploy legacy apt repository definition
@@ -42,20 +47,25 @@
             filename: mongodb
             repo: "{{ _repo }}"
           vars:
-            _repo_apt_base: "deb [ arch=amd64,arm64 ] {{ mongodb_repo_baseurl }}/apt/{{ ansible_distribution | lower }}"
-            _repo_apt_component: "{{ 'main' if (ansible_distribution == 'Debian') else 'multiverse' }}"
-            _repo: "{{ _repo_apt_base }} {{ ansible_distribution_release }}/mongodb-org/{{ mongodb_repo_release }} {{ _repo_apt_component }}"
+            _distro: "{{ ansible_facts.distribution }}"
+            _distro_rel: "{{ ansible_facts.distribution }}"
+            _repo_apt_base: "deb [ arch=amd64,arm64 ] {{ mongodb_repo_baseurl }}/apt/{{ _distro | lower }}"
+            _repo_apt_component: "{{ 'main' if (_distro == 'Debian') else 'multiverse' }}"
+            _repo: "{{ _repo_apt_base }} {{ _distro_rel }}/mongodb-org/{{ mongodb_repo_release }} {{ _repo_apt_component }}"
           changed_when: false
 
     - name: Install deb882 repository
       ansible.builtin.deb822_repository:
         name: mongodb
-        uris: "{{ mongodb_repo_baseurl }}/apt/{{ ansible_distribution | lower }}"
-        suites: "{{ ansible_distribution_release }}/mongodb-org/{{ mongodb_repo_release }}"
-        components: "{{ 'main' if (ansible_distribution == 'Debian') else 'multiverse' }}"
+        uris: "{{ mongodb_repo_baseurl }}/apt/{{ _distro | lower }}"
+        suites: "{{ ansible_facts.distribution_release }}/mongodb-org/{{ mongodb_repo_release }}"
+        components: "{{ 'main' if (_distro == 'Debian') else 'multiverse' }}"
         signed_by: "{{ mongodb_repo_gpg_key }}"
         state: present
         enabled: true
+      vars:
+        _distro: "{{ ansible_facts.distribution }}"
+      changed_when: false
       when: is_deb882 | bool
 
     - name: Update apt repos
@@ -63,7 +73,7 @@
         update_cache: true
 
 - name: Install yum repository
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts.os_family == "RedHat"
   block:
     - name: Install prerequisites
       ansible.builtin.dnf:
@@ -80,7 +90,7 @@
       ansible.builtin.yum_repository:
         name: mongodb
         description: MongoDB Repository
-        baseurl: "{{ _mongodb_yum_base }}/{{ mongodb_repo_release }}/{{ ansible_architecture }}/"
+        baseurl: "{{ _mongodb_yum_base }}/{{ mongodb_repo_release }}/{{ ansible_facts.architecture }}/"
         enabled: true
         gpgcheck: true
         gpgkey: "https://www.mongodb.org/static/pgp/server-{{ mongodb_repo_release }}.asc"
