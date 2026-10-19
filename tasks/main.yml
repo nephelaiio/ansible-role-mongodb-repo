@@ -34,6 +34,14 @@
         _results: "{{ _mongodb_repo_probe.results | default([]) }}"
         _missing: "{{ _results | rejectattr('status', 'equalto', 200) | map(attribute='item') }}"
 
+    - name: Install prerequisites
+      ansible.builtin.apt:
+        name:
+          - gnupg
+          - apt-transport-https
+          - python3-debian
+        update_cache: true
+
     - name: Clean apt repository
       ansible.builtin.file:
         state: absent
@@ -42,14 +50,6 @@
         - "/etc/apt/sources.list.d/mongodb.list"
         - "/etc/apt/sources.list.d/mongodb.sources"
       changed_when: false
-
-    - name: Install prerequisites
-      ansible.builtin.apt:
-        name:
-          - gnupg
-          - apt-transport-https
-          - python3-debian
-        update_cache: true
 
     - name: Set apt repository facts
       ansible.builtin.set_fact:
