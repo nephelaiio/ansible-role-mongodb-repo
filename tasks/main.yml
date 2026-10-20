@@ -73,7 +73,7 @@
             repo: "{{ _repo }}"
           vars:
             _distro: "{{ ansible_facts.distribution }}"
-            _distro_rel: "{{ ansible_facts.distribution }}"
+            _distro_rel: "{{ ansible_facts.distribution_release | lower }}"
             _repo_apt_base: "deb [ arch=amd64,arm64 ] {{ mongodb_repo_baseurl }}/apt/{{ _distro | lower }}"
             _repo_apt_component: "{{ 'main' if (_distro == 'Debian') else 'multiverse' }}"
             _repo: "{{ _repo_apt_base }} {{ _distro_rel }}/mongodb-org/{{ mongodb_repo_release }} {{ _repo_apt_component }}"
